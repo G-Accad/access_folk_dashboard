@@ -1,0 +1,20 @@
+{
+  "index.qmd": {
+    "index.html": "2e83cf20"
+  },
+  "about.qmd": {
+    "about.html": "df12a0f1"
+  },
+  "cleaning.qmd": {
+    "cleaning.html": "90188e60"
+  },
+  "dashboard.qmd": {
+    "dashboard.html": "aec5aa9f"
+  },
+  "overview.qmd": {
+    "overview.html": "1037bdc6"
+  },
+  "political.qmd": {
+    "political.html": "c7faf4d4"
+  }
+}

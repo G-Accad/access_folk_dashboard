@@ -1,0 +1,63 @@
+Respondent
+Q1 - What kind of singing do you do? Tick all that apply
+Q2 - What kinds of folk singing events do you attend? Tick all that apply - Selected Choice
+Q2_8_TEXT - What kinds of folk singing events do you attend? Tick all that apply - Other, please describe - Text
+Q3 - How many times have you been folk singing in the last four weeks?
+Q4 - How old were you when you first took part in a folk singing event?
+Q5 - Why did you choose to start folk singing?
+Q6 - In general, do you prefer to sing
+Q7 - In general, do you prefer to sing
+Q8 - In general, do you prefer to sing
+Q9 - In general, do you prefer to sing
+Q10 - Please describe your ideal folk singing environment.
+Q11_1 - How well do you think you sing when you take part in a folk singing event?
+0 = I sing very badly 
+10 = I sing excellently.
+Q12 - How important to you is it that other people are good singers at folk singing events?
+Q13 - How accepted do you feel when you sing at a folk singing event?
+Q14 - What kind of relationships do you have with people you have met at folk singing events? Please tick all that apply - Selected Choice
+Q14_6_TEXT - What kind of relationships do you have with people you have met at folk singing events? Please tick all that apply - Other, please describe - Text
+Q15 - What other types of music events do you take part in? Please tick all that apply - Selected Choice
+Q15_9_TEXT - What other types of music events do you take part in? Please tick all that apply - Other, please describe - Text
+Q16 - Have you ever been involved in organising folk singing events as an organiser, promoter, volunteer or in another way?
+Q17 - How have you been involved in organising folk singing events? Tick all that apply
+Q20 - For how long did you / have you organised folk singing events?
+Q21 - Have you organised non-folk music events as well? - Selected Choice
+Q21_1_TEXT - Have you organised non-folk music events as well? - Yes, please describe - Text
+Q22 - What motivates you to organise folk singing events?
+Q23 - Have you ever actively tried to reach people who may not normally attend folk singing events?
+Q24 - Please describe what you did and what impacts (if any) these actions had
+Q25 - Have you ever actively tried to improve accessibility to your events? By â€œaccessibilityâ€, we mean removing barriers that might prevent disabled people from attending an event.
+Q26 - Please describe how you tried to improve accessibility to your events and what impacts (if any) these actions had
+Q27 - Which factors are important to you when you choose to sing a particular folk song? Please tick all that apply. - Selected Choice
+Q27_9_TEXT - Which factors are important to you when you choose to sing a particular folk song? Please tick all that apply. - Other, please describe - Text
+Q28 - You selected that the song's content connects you to a specific place. Please describe the place.
+Q29 - You selected that you like to sing about a particular topic. Please describe the topic.
+Q30 - You selected that the song's origin interests you. Please describe the types of origins that interest you.
+Q31 - You selected that you connect with the song's political message. Please describe the political message that you connect with.
+Q32 - Would you like to tell us anything about why you choose to sing particular songs?
+Q33 - Have you ever heard a song at a folk singing event that you felt was inappropriate?
+Q34 - If you feel comfortable doing so, please describe what you found inappropriate.
+Q35 - Did you raise this with anyone at the event?
+Q36 - What (if any) impact did this incident have on your own folk singing activity?
+Q37 - Have you ever experienced any barriers to participating in a folk singing event? For example, something relating to mental or physical health that could not be accommodated, or feeling unwelcome due to your age, gender, sexuality or ethnicity?
+Q38 - Please describe the barrier you experienced
+Q39 - Are you aware of any attempts by the organisers of folk singing events you have attended to be more inclusive or increase accessibility to the event?
+Q40 - Please describe what you noticed the organiser did to be more inclusive or increase accessibility to the event.
+Q41 - Is there anything else you would like to tell us about your experiences relating to folk singing in England - in particular about community, identity or inclusion - that has not been covered in this survey?
+Q44 - How old are you?
+Q45 - What best describes your gender? - Selected Choice
+Q45_6_TEXT - What best describes your gender? - In another way, please describe - Text
+Q46 - How would you describe your sexual orientation? - Selected Choice
+Q47 - What is the highest educational qualification you have obtained? - Selected Choice
+Q48 - Which social class do you most identify with? - Selected Choice
+Q49 - Do you live in the United Kingdom?
+Q52 - How would you describe your national identity? - Selected Choice
+Q53 - What best describes your ethnic group? - Selected Choice
+Q54 - What is your religion, if any? - Selected Choice
+Q55 - Are you currently practising this religion?
+Q56 - Do you consider yourself to be d/Deaf or disabled, or do you have a long-term physical or mental health condition? (We will not ask you to identify any disability or health condition).
+Q57 - If there was a general election tomorrow, which political party would you be most likely to support? - Selected Choice
+Q58_1 - How politically engaged do you consider yourself to be?
+0 = not politically engaged at all
+10 = very politically engaged

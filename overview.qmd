@@ -1,0 +1,227 @@
+---
+title: "Folk Singing Dashboard"
+format: 
+  dashboard:
+    sidebar: false
+    theme: sandstone
+    logo: data/images/AccessFolk.jpg
+    nav-buttons: [github]
+    github: https://github.com/g-accad/access_folk_dashboard
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup}
+#| message: false
+library(tidyverse)
+library(plotly)
+library(scales)
+library(DT)
+library(waffle)
+
+theme_set(theme_minimal(base_size = 24, base_family = "Atkinson Hyperlegible"))
+```
+
+```{r load}
+# Read the cleaned dataset
+data <- read_csv("data/final_dataset.csv")
+```
+
+# Overview {orientation="columns"}
+
+## Column {width="60%"}
+
+```{r}
+# Pre-calculate stats
+num_males <- sum(data$Gender == "Male", na.rm = TRUE)
+p_males <- num_males / sum(!is.na(data$Gender))
+p_males_color <- "primary"
+
+num_white <- sum(data$Ethnicity == "White British", na.rm = TRUE)
+p_white <- num_white / sum(!is.na(data$Ethnicity))
+p_white_color <- "success"
+
+
+p_age_color <- "info"
+age_60plus <- c("60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "old", "Too old")
+p_60plus <- sum(data$Age %in% age_60plus, na.rm = TRUE) / sum(!is.na(data$Age))
+
+
+```
+
+
+
+### Row {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "Male"
+list(icon = "gender-male", color = p_males_color, value = label_percent(accuracy = 0.1)(p_males))
+```
+
+```{r}
+#| content: valuebox
+#| title: "White British"
+list(icon = "globe-americas", color = p_white_color, value = label_percent(accuracy = 0.1)(p_white))
+```
+
+```{r}
+#| content: valuebox
+#| title: "Aged 60+"
+list(
+  icon = "graph-up-arrow",
+  color = "warning",
+  value = label_percent(accuracy = 0.1)(p_60plus)
+)
+
+```
+
+
+
+
+### Row {height="80%" .tabset}
+
+
+```{r}
+#| title: Age Distribution
+
+
+# Create frequency table
+age_summary <- data %>%
+  filter(!is.na(Age)) %>%
+  count(Age) %>%
+  mutate(Percentage = n / sum(n) * 100)
+
+# Create percentage-based bar chart
+age_percent_plot <- plot_ly(
+  data = age_summary,
+  x = ~Age,
+  y = ~Percentage,
+  type = "bar",
+  marker = list(color = 'rgba(0, 123, 255, 0.7)')
+) %>%
+layout(
+  xaxis = list(title = "Age", tickangle = 0),  # horizontal labels
+  yaxis = list(title = "Percentage (%)", ticksuffix = "%"))
+
+age_percent_plot
+
+
+```
+
+```{r}
+#| title: Gender Chart
+plot_ly(
+  data = filter(data, !is.na(Gender)),
+  labels = ~Gender, type = "pie", hole = 0.4,
+  marker = list(colors = c("lightblue", "hotpink", "purple"))
+)
+```
+
+```{r}
+#| title: Age by Gender
+
+age_gender_counts <- data %>%
+  filter(!is.na(Age), !is.na(Gender)) %>%
+  count(Age, Gender) %>%
+  group_by(Age) %>%
+  mutate(Percentage = n / sum(n) * 100)
+
+
+age_hist_percent <- plot_ly(
+  data = age_gender_counts,
+  x = ~Age,
+  y = ~Percentage,
+  color = ~Gender,
+  type = "bar"
+) %>%
+layout(
+  barmode = "group",
+  xaxis = list(title = "Age", tickangle = 0),  # horizontal labels
+  yaxis = list(title = "Percentage (%)")
+)
+
+age_hist_percent
+
+```
+
+```{r}
+#| title: Ethnicity
+ethnicity_counts <- table(data$Ethnicity)
+plot_ly(
+  labels = names(ethnicity_counts),
+  values = ethnicity_counts,
+  type = "pie", hole = 0.5,
+  textinfo = "percent"
+)
+```
+
+```{r}
+#| title: Sexual Orientation
+
+# Count cleaned values
+s <- table(data$Sexuality_clean)
+
+# Create waffle chart
+waffle(s, rows = 15, size = 0.5)
+
+```
+
+## Column {width="40%"}
+
+![](data/images/map_2.png){width=100% height=800px}
+
+
+# Political Engagement {orientation="columns"}
+
+## Column {width="80%"}
+
+```{r}
+#| echo: false
+
+# Clean relevant columns
+df <- data %>%
+  filter(!is.na(Age), !is.na(Political_engagement), !is.na(Political_party)) %>%
+  select(Age, Political_engagement, Political_party)
+
+# Calculate average engagement by Age and Party
+by_party <- df %>%
+  group_by(Age, Political_party) %>%
+  summarise(Average_engagement = mean(Political_engagement), .groups = "drop")
+
+# Calculate overall average engagement by Age
+overall <- df %>%
+  group_by(Age) %>%
+  summarise(Political_party = "Overall", Average_engagement = mean(Political_engagement))
+
+# Combine both
+plot_df <- bind_rows(by_party, overall)
+
+# Define consistent factor levels to order bars
+plot_df$Political_party <- factor(plot_df$Political_party, levels = c("Conservative Party", "Green Party", "Labour Party", "Liberal Democrats", "Other", "Overall"))
+
+# Plot
+plot_ly(
+  data = plot_df,
+  x = ~Age,
+  y = ~Average_engagement,
+  color = ~Political_party,
+  type = "bar"
+) %>%
+layout(
+  barmode = "group",
+  xaxis = list(title = "Age Group", tickangle = -45),
+  yaxis = list(title = "Average Political Engagement (0–10)"),
+  legend = list(title = list(text = "Party"))
+)
+
+```
+
+
+## Column {width="20%"}
+
+```{r}
+#| echo: false
+cat("Insert text here")
+```
+

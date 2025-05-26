@@ -1,0 +1,311 @@
+---
+title: "Cleaning and Transformation"
+format: html
+editor: visual
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+library(tidyverse)
+library(readr)
+library(dplyr)
+#library(writexl) write it to csv instead
+```
+
+```{r}
+
+# Load the 2024/5 version of the ORDA survey data
+orda_raw <- read_csv("data/Access Folk Survey_cleansed for ORDA_FINAL.csv")
+
+data <- orda_raw
+
+```
+
+```{r store questions in txt, echo=FALSE}
+# Extract column names
+column_names <- colnames(data)
+
+# Write column names to a text file
+write.table(column_names, file = "./data/questions.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
+rm(column_names)
+```
+
+## cannot create column Organiser
+
+```{r , echo=FALSE}
+
+your_data <- data
+# Separate the column into multiple rows
+your_data_long <- separate_rows(your_data, `Q21 - Have you organised non-folk music events as well? - Selected Choice`, sep = ",")
+
+# Spread the data back into columns
+your_data_wide <- spread(your_data_long, key = `Q21 - Have you organised non-folk music events as well? - Selected Choice`, value = `Q21 - Have you organised non-folk music events as well? - Selected Choice`)
+
+your_data_wide$`<NA>`<- NULL
+data<- your_data_wide
+rm(your_data,your_data_long,your_data_wide)
+```
+
+Create a new column "Organiser" (Professional,Volunteer,Non-organiser) and remove questions 20 and 21 and all other columns created for that purpose
+
+```{r Organiser, echo=FALSE,eval=FALSE}
+
+
+data$Organiser <- ifelse(
+  !is.na(data[, 76]) | !is.na(data[, 75]),   # Check if either column 76 or 75 has a value
+  "Professional",
+  ifelse(
+    apply(data[, c(74, 77:80)], 1, function(x) any(!is.na(x))),  # Check if any of the other columns have a value
+    "Volunteer",
+    "Non-organiser"
+  )
+)
+
+# Delete columns 74 to 80
+data <- subset(data, select = -c(74:80))
+
+
+# Check if all rows with "No" in column 20 have "Non-organiser" in column 74
+result <- all(data[!is.na(data[, 20]) & data[, 20] == "No", 74] == "Non-organiser", na.rm = TRUE)
+print(result)
+data$`Q20: Have you ever been involved in organising folk singing events as an organiser, promoter, volunteer or in another way?`<- NULL
+
+```
+
+## Creating column: Ethnicity
+
+```{r Ethnicity, echo=FALSE}
+
+unique_values <- table(data$`Q53 - What best describes your ethnic group? - Selected Choice`)
+
+# Create a new column 'Ethnicity' based on conditions
+data <- data %>%
+  mutate(
+    Ethnicity = ifelse(
+      is.na(`Q53 - What best describes your ethnic group? - Selected Choice`) | `Q53 - What best describes your ethnic group? - Selected Choice` == "Prefer not to say",
+      "NA",
+      ifelse(
+        `Q53 - What best describes your ethnic group? - Selected Choice` %in% c(
+          "White English/Welsh/Scottish/Northern Irish/British",
+          "White Cornish"
+        ),
+        "White British",
+        ifelse(
+          `Q53 - What best describes your ethnic group? - Selected Choice` %in% c(
+            "Any other white background, please describe",
+            "White Gypsy or Traveller",
+            "White Irish",
+            "Any other ethnic group, please describe"
+          ),
+          "White Other",
+          ifelse(
+            `Q53 - What best describes your ethnic group? - Selected Choice` %in% c(
+              "Any other Mixed/Multiple ethnic background, please describe",
+              "White and Asian",
+              "White and Black Caribbean"
+            ),
+            "Mixed/multiple",
+            ifelse(
+              `Q53 - What best describes your ethnic group? - Selected Choice` %in% c(
+                "African",
+                "Any other Black/African/Caribbean background, please describe",
+                "Indian"
+              ),
+              "Non-White",
+              "Unknown"
+            )
+          )
+        )
+      )
+    )
+  )
+
+data$`Q53 - What best describes your ethnic group? - Selected Choice`<- NULL
+data$Ethnicity <- as.factor(data$Ethnicity)
+```
+
+## Creating column: Gender
+
+```{r Gender, echo=FALSE}
+
+# Create a new column 'Gender' based on conditions
+data <- data %>%
+  mutate(
+    Gender = case_when(
+      `Q45 - What best describes your gender? - Selected Choice` == "Male" ~ "Male",
+      `Q45 - What best describes your gender? - Selected Choice` == "Female" ~ "Female",
+      TRUE ~ "Other"
+    )
+  )
+
+data$Gender <- as.factor(data$Gender)
+
+data$`Q45 - What best describes your gender? - Selected Choice`<-NULL
+data$`Q45_6_TEXT - What best describes your gender? - In another way, please describe - Text`<-NULL
+
+```
+
+until here: data has: 801 obs and 57 var
+
+## Creating column: Disability
+
+```{r Disability, echo=FALSE}
+
+data$Disability<- as.factor(data$`Q56 - Do you consider yourself to be d/Deaf or disabled, or do you have a long-term physical or mental health condition? (We will not ask you to identify any disability or health condition).`)
+
+# Replace "Prefer not to say" with NA in your column
+data <- data %>%
+  mutate(Disability = case_when(
+    Disability == "Prefer not to say" ~ NA_character_,
+    TRUE ~ Disability
+  ))
+
+data$Disability<-as.factor(data$Disability)
+data$`Q56 - Do you consider yourself to be d/Deaf or disabled, or do you have a long-term physical or mental health condition? (We will not ask you to identify any disability or health condition).`<- NULL
+```
+
+## Creating column: Sexuality
+
+```{r Sexuality, echo=FALSE}
+data$Sexuality<- data$`Q46 - How would you describe your sexual orientation? - Selected Choice`
+
+data <- data %>%
+  mutate(Sexuality = case_when(
+    Sexuality == "Prefer not to say" ~ NA_character_,
+    TRUE ~ Sexuality
+  ))
+
+data$Sexuality<-as.factor(data$Sexuality)
+data$`Q46 - How would you describe your sexual orientation? - Selected Choice`<-NULL
+
+```
+
+## Creating column: Age
+
+```{r Age, echo=FALSE}
+data$Age<-as.factor(data$`Q44 - How old are you?`)
+
+data$`Q44 - How old are you?`<-NULL
+
+```
+
+#### Summary for the Demographic Variables
+
+```{r Summary, echo=FALSE}
+
+summary(data$Age)
+summary(data$Gender)
+
+summary(data$Disability)
+summary(data$Ethnicity)
+
+summary(data$Organiser)
+
+summary(data$Sexuality)
+```
+
+```{r , echo=FALSE,eval=FALSE}
+
+# Education distribution
+education_plot <- your_data %>%
+  plot_ly(x = ~Q52, type = "bar", marker = list(color = ~Q52)) %>%
+  layout(title = "Education Distribution", xaxis = list(title = "Education"), yaxis = list(title = "Count"))
+
+# Social class distribution
+class_plot <- data %>%
+  plot_ly(x = ~`Q54: Which social class do you most identify with? - Selected Choice`, type = "bar", marker = list(color = ~`Q54: Which social class do you most identify with? - Selected Choice`)) %>%
+  layout(title = "Social Class Distribution", xaxis = list(title = "Social Class"), yaxis = list(title = "Count"))
+
+# Religion distribution
+religion_plot <- your_data %>%
+  plot_ly(x = ~Q67, type = "bar", marker = list(color = ~Q67)) %>%
+  layout(title = "Religion Distribution", xaxis = list(title = "Religion"), yaxis = list(title = "Count"))
+
+# Disability distribution check Q28
+
+```
+
+## Creating column: Political
+
+```{r }
+# Rename the column
+colnames(data)[which(colnames(data) == "Q57 - If there was a general election tomorrow, which political party would you be most likely to support? - Selected Choice")] <- "Political_party"
+
+# Group into 5 categories
+data <- data %>%
+  mutate(
+    Political_party = case_when(
+      Political_party %in% c("Labour Party", "Green Party", "Liberal Democrats", "Conservative Party") ~ Political_party,
+      TRUE ~ "Other"
+    ),
+    Political_party = as.factor(Political_party)
+  )
+
+
+colnames(data)[which(colnames(data) == "Q58_1 - How politically engaged do you consider yourself to be?
+0 = not politically engaged at all
+10 = very politically engaged")] <- "Political_engagement"
+
+
+data$Political_engagement <-as.factor(data$Political_engagement)
+
+```
+
+## data transformation and saving the data
+
+```{r , echo=FALSE,warning=FALSE,message=FALSE}
+
+colnames(data)[8]<- "Microphone"
+
+colnames(data)[9]<- "Standing"
+
+colnames(data)[10]<- "Instrument"
+
+colnames(data)[11]<- "Word"
+
+data$Microphone<-as.factor(data$Microphone)
+data$Standing<-as.factor(data$Standing)
+data$Instrument<-as.factor(data$Instrument)
+data$Word<-as.factor(data$Word)
+
+
+
+
+#change ehtnicity into three categories (4th: Unknown)
+ 
+
+ data <- data %>%
+  mutate(
+    Ethnicity = case_when(
+      Ethnicity %in% c("Mixed/multiple", "Non-White") ~ "Any Other Ethnicity",
+      Ethnicity %in% c("NA", "Unknown") ~ "Unknown",
+      TRUE ~ as.character(Ethnicity)
+    ),
+    Ethnicity = as.factor(Ethnicity)
+  )
+
+#Create new sexuality column called sexuality_cleand 
+ 
+ # Create a new column for cleaned sexuality
+data <- data %>%
+  mutate(
+    Sexuality_clean = case_when(
+      is.na(Sexuality) ~ "NA",
+      str_detect(Sexuality, regex("straight|heterosexual", ignore_case = TRUE)) ~ "Straight",
+      str_detect(Sexuality, regex("bisexual", ignore_case = TRUE)) ~ "Bisexual",
+      str_detect(Sexuality, regex("gay|lesbian", ignore_case = TRUE)) ~ "Gay/Lesbian",
+      str_detect(Sexuality, regex("queer", ignore_case = TRUE)) ~ "Queer",
+      str_detect(Sexuality, regex("questioning", ignore_case = TRUE)) ~ "Questioning",
+      TRUE ~ "Other"
+    )
+  )
+
+
+
+
+#save new data
+write.csv(data, file ="./data/final_dataset.csv", row.names = FALSE)
+
+
+```

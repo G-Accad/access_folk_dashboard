@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "access_folk_dashboard",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "overview.html",
+    "href": "overview.html",
+    "title": "Folk Singing Dashboard",
+    "section": "",
+    "text": "library(tidyverse)\n\nWarning: package 'ggplot2' was built under R version 4.4.3\n\nlibrary(plotly)\nlibrary(scales)\nlibrary(DT)\ntheme_set(theme_minimal(base_size = 24, base_family = \"Atkinson Hyperlegible\"))\n# Read the cleaned dataset\ndata &lt;- read_csv(\"data/final_dataset.csv\")\n\nRows: 801 Columns: 61\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (59): Respondent, Q1 - What kind of singing do you do? Tick all that app...\ndbl  (2): Q11_1 - How well do you think you sing when you take part in a fol...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "overview.html#column",
+    "href": "overview.html#column",
+    "title": "Folk Singing Dashboard",
+    "section": "Column",
+    "text": "Column\n\n# Pre-calculate stats\nnum_males &lt;- sum(data$Gender == \"Male\", na.rm = TRUE)\np_males &lt;- num_males / sum(!is.na(data$Gender))\np_males_color &lt;- \"primary\"\n\nnum_white &lt;- sum(data$Ethnicity == \"White British\", na.rm = TRUE)\np_white &lt;- num_white / sum(!is.na(data$Ethnicity))\np_white_color &lt;- \"success\"\n\n\np_age_color &lt;- \"info\"\nage_60plus &lt;- c(\"60-64\", \"65-69\", \"70-74\", \"75-79\", \"80-84\", \"85-89\", \"old\", \"Too old\")\np_60plus &lt;- sum(data$Age %in% age_60plus, na.rm = TRUE) / sum(!is.na(data$Age))\n\n\nRow\n\nlist(icon = \"gender-male\", color = p_males_color, value = label_percent(accuracy = 0.1)(p_males))\n\n$icon\n[1] \"gender-male\"\n\n$color\n[1] \"primary\"\n\n$value\n[1] \"47.9%\"\n\n\n\nlist(icon = \"globe-americas\", color = p_white_color, value = label_percent(accuracy = 0.1)(p_white))\n\n$icon\n[1] \"globe-americas\"\n\n$color\n[1] \"success\"\n\n$value\n[1] \"85.6%\"\n\n\n\nlist(\n  icon = \"graph-up-arrow\",\n  color = \"warning\",\n  value = label_percent(accuracy = 0.1)(p_60plus)\n)\n\n$icon\n[1] \"graph-up-arrow\"\n\n$color\n[1] \"warning\"\n\n$value\n[1] \"64.7%\""
+  }
+]
