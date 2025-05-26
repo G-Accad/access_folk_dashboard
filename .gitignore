@@ -6,3 +6,5 @@
 *.nb.html
 *.DS_Store
 
+
+/.quarto/

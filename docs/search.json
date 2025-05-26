@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "cleaning.html",
+    "href": "cleaning.html",
+    "title": "Cleaning and Transformation",
+    "section": "",
+    "text": "knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)\n\nlibrary(tidyverse)\n\nWarning: package 'ggplot2' was built under R version 4.4.3\n\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.2     ✔ tibble    3.2.1\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(readr)\nlibrary(dplyr)\n#library(writexl) write it to csv instead\n# Load the 2024/5 version of the ORDA survey data\norda_raw &lt;- read_csv(\"data/Access Folk Survey_cleansed for ORDA_FINAL.csv\")\n\ndata &lt;- orda_raw"
+  },
+  {
+    "objectID": "cleaning.html#cannot-create-column-organiser",
+    "href": "cleaning.html#cannot-create-column-organiser",
+    "title": "Cleaning and Transformation",
+    "section": "cannot create column Organiser",
+    "text": "cannot create column Organiser\nCreate a new column “Organiser” (Professional,Volunteer,Non-organiser) and remove questions 20 and 21 and all other columns created for that purpose"
+  },
+  {
+    "objectID": "cleaning.html#creating-column-ethnicity",
+    "href": "cleaning.html#creating-column-ethnicity",
+    "title": "Cleaning and Transformation",
+    "section": "Creating column: Ethnicity",
+    "text": "Creating column: Ethnicity"
+  },
+  {
+    "objectID": "cleaning.html#creating-column-gender",
+    "href": "cleaning.html#creating-column-gender",
+    "title": "Cleaning and Transformation",
+    "section": "Creating column: Gender",
+    "text": "Creating column: Gender\nuntil here: data has: 801 obs and 57 var"
+  },
+  {
+    "objectID": "cleaning.html#creating-column-disability",
+    "href": "cleaning.html#creating-column-disability",
+    "title": "Cleaning and Transformation",
+    "section": "Creating column: Disability",
+    "text": "Creating column: Disability"
+  },
+  {
+    "objectID": "cleaning.html#creating-column-sexuality",
+    "href": "cleaning.html#creating-column-sexuality",
+    "title": "Cleaning and Transformation",
+    "section": "Creating column: Sexuality",
+    "text": "Creating column: Sexuality"
+  },
+  {
+    "objectID": "cleaning.html#creating-column-age",
+    "href": "cleaning.html#creating-column-age",
+    "title": "Cleaning and Transformation",
+    "section": "Creating column: Age",
+    "text": "Creating column: Age\n\nSummary for the Demographic Variables\n\n\n  18-19   20-24   25-29   30-34   35-39   40-44   45-49   50-54   55-59   60-64 \n      3      18      23      25      27      33      39      52      55     102 \n  65-69   70-74   75-79   80-84   85-89     old Too old    NA's \n    143     170      72      15       1       1       1      21 \n\n\nFemale   Male  Other \n   367    384     50 \n\n\n  No  Yes NA's \n 559  205   37 \n\n\nMixed/multiple             NA      Non-White        Unknown  White British \n             5             28              3             56            686 \n   White Other \n            23 \n\n\nLength  Class   Mode \n     0   NULL   NULL \n\n\n                                                    Arospec \n                                                          1 \n                                            asexual sapphic \n                                                          1 \n                                         Asexual submissive \n                                                          1 \n                                                   Assexual \n                                                          1 \n                                       Autoerotic /celibate \n                                                          1 \n                                                   Bisexual \n                                                         43 \n                                                   celibate \n                                                          1 \n                                                 Demisexual \n                                                          1 \n                                                     Female \n                                                          1 \n                                                        Gay \n                                                          5 \n                                                  Gay women \n                                                          1 \n                                        Heterosexual so far \n                                                          1 \n                                              Heterosexual. \n                                                          1 \n                                      Heterosexual/Straight \n                                                        641 \n                        I do not have a beard or pony tail. \n                                                          1 \nI find this question intrusive but even more so, irrelevant \n                                                          1 \n                            In another way, please describe \n                                                         13 \n                                                 Irrelevant \n                                                          2 \n                      It's called private life for a reason \n                                                          1 \n                                                    Lesbian \n                                                         10 \n                                            Not nailed down \n                                                          1 \n                                                   Not sure \n                                                          5 \n                     Not sure if I'm a lesbian or bisexual. \n                                                          1 \n                                                        Old \n                                                          1 \n                                                 Pan sexual \n                                                          1 \n                                             Past it mostly \n                                                          1 \n                                        Perfectly ordinary. \n                                                          1 \n                                            Person specific \n                                                          1 \n                                                      Queer \n                                                         22 \n                                                Questioning \n                                                          6 \n                                       Retired heterosexual \n                                                          1 \n                                                       NA's \n                                                         32"
+  },
+  {
+    "objectID": "cleaning.html#creating-column-political",
+    "href": "cleaning.html#creating-column-political",
+    "title": "Cleaning and Transformation",
+    "section": "Creating column: Political",
+    "text": "Creating column: Political\n\n# Rename the column\ncolnames(data)[which(colnames(data) == \"Q57 - If there was a general election tomorrow, which political party would you be most likely to support? - Selected Choice\")] &lt;- \"Political_party\"\n\n# Group into 5 categories\ndata &lt;- data %&gt;%\n  mutate(\n    Political_party = case_when(\n      Political_party %in% c(\"Labour Party\", \"Green Party\", \"Liberal Democrats\", \"Conservative Party\") ~ Political_party,\n      TRUE ~ \"Other\"\n    ),\n    Political_party = as.factor(Political_party)\n  )\n\n\ncolnames(data)[which(colnames(data) == \"Q58_1 - How politically engaged do you consider yourself to be?\n0 = not politically engaged at all\n10 = very politically engaged\")] &lt;- \"Political_engagement\"\n\n\ndata$Political_engagement &lt;-as.factor(data$Political_engagement)"
+  },
+  {
+    "objectID": "cleaning.html#data-transformation-and-saving-the-data",
+    "href": "cleaning.html#data-transformation-and-saving-the-data",
+    "title": "Cleaning and Transformation",
+    "section": "data transformation and saving the data",
+    "text": "data transformation and saving the data"
+  }
+]
