@@ -24,7 +24,7 @@ theme_set(theme_minimal(base_size = 24, base_family = "Atkinson Hyperlegible"))
 
 ```{r load}
 # Read the cleaned dataset
-data <- read_csv("data/final_dataset.csv")
+data <- read.csv("data/final_dataset.csv")
 ```
 
 # Overview {orientation="columns"}
@@ -172,9 +172,10 @@ waffle(s, rows = 15, size = 0.5)
 ![](data/images/map_2.png){width=100% height=800px}
 
 
-# Political Engagement {orientation="columns"}
+# Political Engagement {orientation="rows"}
 
-## Column {width="80%"}
+## Row {height="80%"}
+
 
 ```{r}
 #| echo: false
@@ -187,18 +188,31 @@ df <- data %>%
 # Calculate average engagement by Age and Party
 by_party <- df %>%
   group_by(Age, Political_party) %>%
-  summarise(Average_engagement = mean(Political_engagement), .groups = "drop")
+  summarise(Average_engagement = round(mean(Political_engagement),2), .groups = "drop")
 
 # Calculate overall average engagement by Age
 overall <- df %>%
   group_by(Age) %>%
-  summarise(Political_party = "Overall", Average_engagement = mean(Political_engagement))
+  summarise(Political_party = "Overall", Average_engagement = round(mean(Political_engagement),2))
 
 # Combine both
 plot_df <- bind_rows(by_party, overall)
 
 # Define consistent factor levels to order bars
-plot_df$Political_party <- factor(plot_df$Political_party, levels = c("Conservative Party", "Green Party", "Labour Party", "Liberal Democrats", "Other", "Overall"))
+plot_df$Political_party <- factor(
+  plot_df$Political_party,
+  levels = c("Conservative Party", "Green Party", "Labour Party", "Liberal Democrats", "Other", "Overall")
+)
+
+# Define colours
+party_colors <- c(
+  "Conservative Party" = "#0087DC",     # Conservative Blue
+  "Green Party" = "#6AB023",            # Green
+  "Labour Party" = "#E4003B",           # Red
+  "Liberal Democrats" = "#FAA61A",      # LD Yellow
+  "Other" = "#999999",                  # Grey for misc
+  "Overall" = "#444444"                 # Dark grey for average
+)
 
 # Plot
 plot_ly(
@@ -206,19 +220,21 @@ plot_ly(
   x = ~Age,
   y = ~Average_engagement,
   color = ~Political_party,
+  colors = party_colors,
   type = "bar"
 ) %>%
 layout(
   barmode = "group",
   xaxis = list(title = "Age Group", tickangle = -45),
   yaxis = list(title = "Average Political Engagement (0–10)"),
-  legend = list(title = list(text = "Party"))
+  legend = list(title = list(text = "Party")),
+  bargap = 0.35
 )
 
 ```
 
 
-## Column {width="20%"}
+## Row {height="20%"}
 
 ```{r}
 #| echo: false
