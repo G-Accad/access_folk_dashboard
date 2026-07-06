@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -iE \"warning|error|not available|had non-zero exit|failed\" /tmp/source_install.log | grep -viE \"^gcc |warning: unused|no visible\" | tail -60)",
+      "Read(//tmp/**)"
+    ]
+  }
+}

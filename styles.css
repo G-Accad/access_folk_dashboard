@@ -1,1 +1,15 @@
 /* css styles */
+
+/* Center the icon + text inside the Overview value boxes */
+.bslib-value-box .value-box-grid {
+  justify-content: center;
+  align-items: center;
+}
+.bslib-value-box .value-box-area {
+  text-align: center;
+  flex-grow: 0;
+}
+.bslib-value-box .value-box-title,
+.bslib-value-box .value-box-value {
+  overflow: visible;
+}
